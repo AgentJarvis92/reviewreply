@@ -1,0 +1,515 @@
+<html vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">ReviewReply - AI Restaurant Management</title>
+    <style vid="5">
+        :root {
+            --bg-void: #050505;
+            --bg-surface: #141414;
+            --bg-surface-elevated: #1F1F1F;
+            --bg-input: #262626;
+            --accent-orange: #F97316; 
+            --accent-glow: rgba(249, 115, 22, 0.15);
+            --text-primary: #FFFFFF;
+            --text-secondary: #9CA3AF;
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-highlight: rgba(255, 255, 255, 0.1);
+            --radius-md: 8px; 
+            --radius-lg: 12px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --nav-width: 960px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            
+            background-image: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(249, 115, 22, 0.1), rgba(0,0,0,0));
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .gap-2 { gap: 8px; }
+        .gap-4 { gap: 16px; }
+        .gap-6 { gap: 24px; }
+        .gap-8 { gap: 32px; }
+        .grid { display: grid; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .w-full { width: 100%; }
+        .text-center { text-align: center; }
+        
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: white; 
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-orange);
+            color: white;
+            
+        }
+
+        .btn-primary:hover {
+            background-color: #ea580c;
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid transparent;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: var(--border-highlight);
+        }
+
+        .card-elevated {
+            background-color: var(--bg-surface-elevated);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .pill-badge {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-orange);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        
+        header {
+            padding: 12px 24px;
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: var(--nav-width);
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(10, 10, 10, 0.6);
+            border-radius: 100px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        
+        header .container {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            max-width: none;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-left: 24px;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover { color: white; }
+
+        .hero-section {
+            padding-top: 200px;
+            padding-bottom: 100px;
+            position: relative;
+        }
+
+        .hero-dashboard-mock {
+            margin-top: 80px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 50px 100px -20px rgba(0,0,0,0.8);
+            position: relative;
+            overflow: hidden;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mock-sidebar {
+            width: 220px;
+            border-right: 1px solid var(--border-subtle);
+            padding-right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mock-nav-item {
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mock-nav-item.active {
+            background-color: var(--bg-surface-elevated);
+            color: white;
+        }
+
+        .mock-content {
+            flex: 1;
+            padding-left: 32px;
+            padding-top: 8px;
+        }
+
+        
+        .mock-card {
+            background-color: #FFFFFF;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-bar {
+            background-color: #F3F4F6;
+            border: 1px solid #E5E7EB;
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            color: #4B5563;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pricing-section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .price-tag {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin: 16px 0;
+        }
+        
+        .price-period {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 32px 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .feature-icon {
+            color: var(--accent-orange);
+            width: 16px;
+            height: 16px;
+        }
+
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-surface-elevated);
+            margin-right: 12px;
+        }
+
+        svg { display: block; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .hero-dashboard-mock { display: none; }
+            .container { padding: 0 16px; }
+            header { 
+                top: 0; 
+                width: 100%; 
+                border-radius: 0; 
+                border-left: none; 
+                border-right: none; 
+                border-top: none;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body vid="6">
+
+    <header vid="7">
+        <div class="container flex justify-between items-center" vid="8">
+            <div class="flex items-center gap-2" vid="9">
+                <div style="width: 24px; height: 24px; background: var(--accent-orange); border-radius: 6px;" vid="10"></div>
+                <span style="font-weight: 700; font-size: 1.1rem; letter-spacing: -0.01em; color: white;" vid="11">ReviewReply</span>
+            </div>
+            <nav class="flex items-center" vid="12">
+                <a href="#" class="nav-link" vid="13">Features</a>
+                <a href="#" class="nav-link" vid="14">Pricing</a>
+                <a href="#" class="nav-link" vid="15">Customers</a>
+            </nav>
+            <div class="flex items-center gap-4" vid="16">
+                <a href="#" class="nav-link" style="margin-left: 0;" vid="17">Log in</a>
+                <a href="#" class="btn btn-primary text-sm" style="padding: 8px 16px; border-radius: 100px;" vid="18">Start Free Trial</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section container" vid="19">
+        
+        
+        <div class="text-center" style="position: relative; z-index: 10; max-width: 800px; margin: 0 auto;" vid="20">
+            <span class="pill-badge" vid="21">v2.0 Now Available</span>
+            <h1 vid="22">Turn reviews into revenue with AI.</h1>
+            <p style="margin: 24px auto; max-width: 600px;" vid="23">
+                Automatically monitor and respond to restaurant reviews across Google, Yelp, and TripAdvisor. Maintain your reputation while you sleep.
+            </p>
+            <div class="flex justify-center gap-4" style="margin-top: 40px;" vid="24">
+                <a href="#" class="btn btn-primary" style="padding: 12px 32px;" vid="25">Start Free Trial</a>
+                <a href="#" class="btn btn-secondary" vid="26">View Demo</a>
+            </div>
+        </div>
+
+        <div class="hero-dashboard-mock flex" vid="27">
+            <div class="mock-sidebar" vid="28">
+                <div class="mock-nav-item active" vid="29">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vid="30"><rect x="3" y="3" width="7" height="7" vid="31"></rect><rect x="14" y="3" width="7" height="7" vid="32"></rect><rect x="14" y="14" width="7" height="7" vid="33"></rect><rect x="3" y="14" width="7" height="7" vid="34"></rect></svg>
+                    Dashboard
+                </div>
+                <div class="mock-nav-item" vid="35">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vid="36"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" vid="37"></path></svg>
+                    Reviews
+                </div>
+                <div class="mock-nav-item" vid="38">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vid="39"><path d="M12 20h9" vid="40"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" vid="41"></path></svg>
+                    Drafts
+                </div>
+                <div style="margin-top: auto; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border-subtle);" vid="42">
+                    <div style="font-size: 0.8rem; color: white; margin-bottom: 4px; font-weight: 600;" vid="43">Upgrade to Pro</div>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);" vid="44">Unlock unlimited AI replies.</div>
+                </div>
+            </div>
+
+            <div class="mock-content" vid="45">
+                <div class="flex justify-between items-center" style="margin-bottom: 24px;" vid="46">
+                    <div vid="47">
+                        <h3 style="color: white; margin: 0; font-size: 1.1rem;" vid="48">Recent Activity</h3>
+                        <p class="text-xs" style="margin: 0; opacity: 0.7;" vid="49">Today, Oct 24</p>
+                    </div>
+                    <div class="btn btn-secondary text-xs" style="padding: 6px 12px; border-radius: 6px;" vid="50">Filter</div>
+                </div>
+
+                
+                <div class="mock-card" vid="51">
+                    <div class="flex justify-between items-start mb-2" vid="52">
+                        <div class="flex gap-3" vid="53">
+                            <div style="width: 32px; height: 32px; background: #E5E7EB; border-radius: 50%;" vid="54"></div>
+                            <div vid="55">
+                                <div style="font-size: 0.9rem; color: #111827; font-weight: 600;" vid="56">Sarah Jenkins</div>
+                                <div class="text-xs" style="color: #F59E0B; margin-top: 2px;" vid="57">????? <span style="color: #6B7280; margin-left: 4px;" vid="58">Google Review</span></div>
+                            </div>
+                        </div>
+                        <span class="text-xs" style="color: #9CA3AF;" vid="59">2h ago</span>
+                    </div>
+                    <p class="text-sm" style="color: #374151; margin: 16px 0; line-height: 1.5;" vid="60">"The atmosphere was incredible and the truffle pasta was to die for! Will definitely be coming back."</p>
+                    <div class="input-bar" vid="61">
+                        <span style="color: #4B5563;" vid="62">AI Suggestion: Thank you Sarah! We're thrilled...</span>
+                        <div style="background: var(--accent-orange); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center;" vid="63">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vid="64"><line x1="12" y1="5" x2="12" y2="19" vid="65"></line><line x1="5" y1="12" x2="19" y2="12" vid="66"></line></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section" vid="67">
+        <div class="container" vid="68">
+            <div class="text-center" style="margin-bottom: 60px;" vid="69">
+                <h2 vid="70">Simple Pricing</h2>
+                <p vid="71">No hidden fees. Cancel anytime.</p>
+            </div>
+
+            <div class="grid grid-2 gap-8" style="max-width: 900px; margin: 0 auto;" vid="72">
+                <div class="card" vid="73">
+                    <h3 vid="74">Starter</h3>
+                    <p class="text-sm" vid="75">For independent cafes and bistros.</p>
+                    <div class="price-tag" vid="76">$99<span class="price-period" vid="77">/mo</span></div>
+                    <a href="#" class="btn btn-secondary w-full" vid="78">Get Started</a>
+                    
+                    <ul class="feature-list" vid="79">
+                        <li vid="80"><span class="feature-icon" vid="81">?</span> 100 AI Replies / mo</li>
+                        <li vid="82"><span class="feature-icon" vid="83">?</span> Google &amp; Yelp Integration</li>
+                        <li vid="84"><span class="feature-icon" vid="85">?</span> Email Support</li>
+                        <li vid="86"><span class="feature-icon" vid="87">?</span> Weekly Digest</li>
+                    </ul>
+                </div>
+
+                <div class="card card-elevated" style="border-color: rgba(249, 115, 22, 0.3);" vid="88">
+                    
+                    <div style="position: absolute; top: 0; right: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.08), transparent 70%); pointer-events: none;" vid="89"></div>
+                    <div class="flex justify-between items-start" vid="90">
+                        <div vid="91">
+                            <h3 style="color: white;" vid="92">Enterprise</h3>
+                            <p class="text-sm" vid="93">For multi-location restaurant groups.</p>
+                        </div>
+                        <div style="background: rgba(249, 115, 22, 0.2); color: var(--accent-orange); font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; font-weight: 600;" vid="94">POPULAR</div>
+                    </div>
+                    
+                    <div class="price-tag" vid="95">$249<span class="price-period" vid="96">/mo</span></div>
+                    <a href="#" class="btn btn-primary w-full" vid="97">Start Free Trial</a>
+                    
+                    <ul class="feature-list" vid="98">
+                        <li vid="99"><span class="feature-icon" vid="100">?</span> Unlimited AI Replies</li>
+                        <li vid="101"><span class="feature-icon" vid="102">?</span> All Review Platforms</li>
+                        <li vid="103"><span class="feature-icon" vid="104">?</span> Priority 24/7 Support</li>
+                        <li vid="105"><span class="feature-icon" vid="106">?</span> Custom Brand Voice</li>
+                        <li vid="107"><span class="feature-icon" vid="108">?</span> Sentiment Analysis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="padding-bottom: 120px;" vid="109">
+        <div class="grid grid-3 gap-6" vid="110">
+            <div class="card" vid="111">
+                <div class="flex items-center mb-4" vid="112">
+                    <div class="testimonial-avatar" style="background-color: #333;" vid="113"></div>
+                    <div vid="114">
+                        <div style="font-weight: 600; font-size: 0.9rem;" vid="115">Marcus Chen</div>
+                        <div class="text-xs text-secondary" vid="116">Owner, The Golden Wok</div>
+                    </div>
+                </div>
+                <p class="text-sm" style="color: #ccc;" vid="117">"ReviewReply saves me about 5 hours a week. The AI understands our tone perfectly—friendly but professional."</p>
+            </div>
+            <div class="card" vid="118">
+                <div class="flex items-center mb-4" vid="119">
+                    <div class="testimonial-avatar" style="background-color: #444;" vid="120"></div>
+                    <div vid="121">
+                        <div style="font-weight: 600; font-size: 0.9rem;" vid="122">Elena Rodriguez</div>
+                        <div class="text-xs text-secondary" vid="123">GM, La Casa Bella</div>
+                    </div>
+                </div>
+                <p class="text-sm" style="color: #ccc;" vid="124">"We used to ignore reviews because we didn't have time. Now we respond to everyone, and our rating went up 0.4 stars."</p>
+            </div>
+            <div class="card" vid="125">
+                <div class="flex items-center mb-4" vid="126">
+                    <div class="testimonial-avatar" style="background-color: #222;" vid="127"></div>
+                    <div vid="128">
+                        <div style="font-weight: 600; font-size: 0.9rem;" vid="129">David Smith</div>
+                        <div class="text-xs text-secondary" vid="130">Founder, Burger Joint</div>
+                    </div>
+                </div>
+                <p class="text-sm" style="color: #ccc;" vid="131">"The interface is so clean and easy to use. My managers learned it in 5 minutes. Highly recommended."</p>
+            </div>
+        </div>
+    </section>
+
+    <footer style="border-top: 1px solid var(--border-subtle); padding: 60px 0; background: var(--bg-surface);" vid="132">
+        <div class="container flex justify-between items-center" vid="133">
+            <div class="text-sm text-secondary" vid="134">© 2023 ReviewReply AI. All rights reserved.</div>
+            <div class="flex gap-6" vid="135">
+                <a href="#" class="text-sm text-secondary" style="text-decoration: none;" vid="136">Privacy</a>
+                <a href="#" class="text-sm text-secondary" style="text-decoration: none;" vid="137">Terms</a>
+                <a href="#" class="text-sm text-secondary" style="text-decoration: none;" vid="138">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+
+</body></html>

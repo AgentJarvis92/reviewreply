@@ -1,0 +1,70 @@
+services:
+  # Main web service for health checks
+  - type: web
+    name: restaurant-saas-backend
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false  # Set in Render dashboard
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: FROM_EMAIL
+        sync: false
+
+  # Ingestion cron job (every 4 hours)
+  - type: cron
+    name: ingestion-job
+    env: node
+    region: oregon
+    schedule: "0 */4 * * *"
+    buildCommand: npm install && npm run build
+    startCommand: node dist/jobs/ingestion.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: FROM_EMAIL
+        sync: false
+
+  # Newsletter cron job (Monday 9am)
+  - type: cron
+    name: newsletter-job
+    env: node
+    region: oregon
+    schedule: "0 9 * * 1"
+    buildCommand: npm install && npm run build
+    startCommand: node dist/jobs/newsletter.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: FROM_EMAIL
+        sync: false
+
+databases:
+  - name: restaurant-saas-db
+    databaseName: restaurant_saas
+    region: oregon
+    plan: starter
+    postgresMajorVersion: 16
