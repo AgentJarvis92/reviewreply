@@ -16,9 +16,9 @@ import { addRestaurant, validatePlaceId } from './src/services/onboarding.js';
 import { syncNewReviews } from './src/services/reviewFetcher.js';
 import { processNewReviews } from './src/services/reviewProcessor.js';
 import { classifyReview, needsApproval } from './src/services/reviewClassifier.js';
-import { generatePlaceholderReply } from './src/services/mockReplyGenerator.js';
+import { generateReply } from './src/services/replyGeneratorOpenAI.js';
 import { supabase } from './src/services/database.js';
-import type { Review } from './src/types/models.js';
+import type { Review, Restaurant } from './src/types/models.js';
 
 const JOES_PIZZA_PLACE_ID = 'ChIJifIePKtZwokRVZ-UdRGkZzs';
 const KEVIN_PHONE = '+18622901319';
@@ -84,11 +84,11 @@ async function testClassification(reviews: Review[]) {
   }
 }
 
-async function testMockReplies(reviews: Review[]) {
-  console.log('\n═══ TEST 5: Mock Reply Generation ═══');
+async function testGPT4oReplies(reviews: Review[], restaurant: Restaurant) {
+  console.log('\n═══ TEST 5: GPT-4o Reply Generation ═══');
   for (const review of reviews.slice(0, 3)) {
     const sentiment = classifyReview(review);
-    const output = generatePlaceholderReply(review, sentiment);
+    const output = await generateReply(review, restaurant);
     assert(output.draft_text.length > 20, `Reply generated (${output.draft_text.length} chars)`);
     assert(typeof output.escalation_flag === 'boolean', `Escalation flag: ${output.escalation_flag}`);
     console.log(`  ${review.rating}★ [${sentiment}] → "${output.draft_text.slice(0, 80)}..."`);
@@ -168,7 +168,7 @@ async function testDatabaseIntegrity(restaurantId: string) {
 }
 
 async function main() {
-  console.log('🚀 ReviewReply Full Pipeline Test');
+  console.log('🚀 Maitreo Full Pipeline Test');
   console.log('══════════════════════════════════\n');
 
   try {
@@ -182,7 +182,7 @@ async function main() {
     }
 
     await testClassification(reviews);
-    await testMockReplies(reviews);
+    await testGPT4oReplies(reviews, restaurant);
     await testFullPipeline(reviews, restaurant);
     await testDatabaseIntegrity(restaurant.id);
 

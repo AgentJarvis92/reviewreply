@@ -58,7 +58,7 @@ async function testTwilioSms(reply: string, reviewSnippet: string, rating: numbe
   }
 
   const body = [
-    `🍽️ ReviewReply Test`,
+    `🍽️ Maitreo Test`,
     `New ${rating}★ review:`,
     `"${reviewSnippet.slice(0, 100)}..."`,
     ``,
@@ -73,7 +73,7 @@ async function testTwilioSms(reply: string, reviewSnippet: string, rating: numbe
 }
 
 async function main() {
-  console.log('🚀 ReviewReply Phase 1 MVP - Pipeline Test\n');
+  console.log('🚀 Maitreo Phase 1 MVP - Pipeline Test\n');
 
   // Step 1: Fetch reviews
   const reviews = await testGooglePlaces();
