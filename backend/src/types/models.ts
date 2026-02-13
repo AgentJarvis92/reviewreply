@@ -3,12 +3,16 @@
 export interface Restaurant {
   id: string;
   name: string;
-  location: string | null;
-  owner_email: string;
-  tone_profile_json: ToneProfile;
-  competitors_json: Competitor[];
-  created_at: Date;
-  updated_at: Date;
+  location?: string | null;
+  owner_email?: string;
+  owner_phone?: string;
+  phone?: string;
+  email?: string;
+  tone_profile_json?: ToneProfile;
+  competitors_json?: Competitor[];
+  created_at?: Date;
+  updated_at?: Date;
+  [key: string]: any; // Allow additional fields from database
 }
 
 export interface ToneProfile {

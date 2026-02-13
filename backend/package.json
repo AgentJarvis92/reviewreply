@@ -32,6 +32,7 @@
   "devDependencies": {
     "@types/node": "^20.11.5",
     "@types/pg": "^8.10.9",
+    "lighthouse": "^13.0.3",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   }
